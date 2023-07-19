@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Passion+One&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  
+}
+
+body {
+  background-color: #00C6F5;
+  font-family: 'Passion One', cursive;
+}
+
+.container-top {
+  display: flex;
+  justify-content: space-around;
+}
+
+.toHold {
+  background-color: #05040A;
+  width: 10px;
+  height: 30px;
+  top: 0;
+}
+
+main {
+  width: 90%;
+  background-color: #E4E9EE;
+  border-radius: 1px;
+  border: 1px solid #05040A;
+  padding: 10px;
+  margin: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.add-form {
+  display: flex;
+  margin-bottom: 10px;
+  gap: 15px;
+  width: 100%;
+}
+
+input {
+  width: 100%;
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #76BF41;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+}
+input:hover {
+  border-color: #FF2D01;
+}
+
+.btn-add-task {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #5046F9;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.material-symbols-outlined {
+  color: white;
+}
+
+.btn-edit {
+  background-color: #F5CE00;
+}
+
+.btn-delete {
+  background-color: #FC0814;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  padding: 10px 15px;
+  border: 1px solid black;
+  text-align: center;
+}
+
+td {
+  color: #333;
+}
+tr:nth-child(even) {
+  background-color: #EAF7FE;
+}
+
+select {
+  background-color: lightgray;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  height: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  outline: none;
+}
+
+select:hover {
+  background-color: darkgrey;
+}
+
+

@@ -70,12 +70,18 @@ input:hover {
 .material-symbols-outlined {
   color: white;
 }
+.btn-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
 
-.btn-edit {
+.btn-action:nth-child(1) {
   background-color: #F5CE00;
 }
 
-.btn-delete {
+.btn-action:nth-child(2) {
   background-color: #FC0814;
 }
 

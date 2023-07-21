@@ -8,13 +8,7 @@ const createDate = () => {
   return newDate
 }
 
-addTask.addEventListener('submit', e => {
-  e.preventDefault()
-  const inputTaskText = document.querySelector('#input-task')
-  toTask(inputTaskText.value)
-  createDate()
-  inputTaskText.value = ''
-})
+
 const createElement = (tag) => document.createElement(tag)
 
 const createSelect = () => {
@@ -74,44 +68,38 @@ const createRow = (textTask, dateTask = '') => {
     tr.appendChild(tdBtn)
   }
 }
-createRow()
+
 const saveTaskLocal = (valueTask, valueDate = '') => {
   
+  if (valueTask) {
   taskSaves.push(valueTask)
   const tasksJSON = JSON.stringify(taskSaves)
-  console.log(tasksJSON)
+  
   localStorage.setItem('textOfTask', tasksJSON)
-  //localStorage.setItem('dateOfTask', valueDate)
+  //localStorage.setItem('dateOfTask', valueDate)]
+  }
 }
 saveTaskLocal()
-
-const toTask = (inputText) => {
-  
-  const dateTask = createDate()
-  saveTaskLocal(inputText, dateTask)
-  
-}
-toTask()
 
 const addTaskSave = () => {
   const sla = localStorage.getItem('textOfTask')
   const dateOfTask = localStorage.getItem('dateOfTask')
 
   const parseTaskSave = JSON.parse(sla)
-  
+  console.log(parseTaskSave)
   for (let valueTask of parseTaskSave) {
     createRow(valueTask)
   }
 
   
 }
-
 addTaskSave()
 
-
-
-
-
-
-
-
+addTask.addEventListener('submit', e => {
+  e.preventDefault()
+  const inputTaskText = document.querySelector('#input-task')
+  createRow(inputTaskText.value)
+  saveTaskLocal(inputTaskText.value)
+  createDate()
+  inputTaskText.value = ''
+})

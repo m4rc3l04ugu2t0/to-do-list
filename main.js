@@ -1,11 +1,10 @@
 const tbody = document.querySelector('tbody')
 const addTask = document.querySelector('.add-form')
-//const taskSaves = []
 
 const createDate = () => {
-  const date = new Date()
-  const newDate = date.toLocaleString()
-  return newDate
+  const options = { dateStyle: 'long', timeStyle: 'short' }
+  const date = new Date().toLocaleString('pt-br', options)
+  return date
 }
 
 
@@ -32,10 +31,7 @@ const createTextBtn = () => {
   return [spanEdit, spanDelete]
 }
 
-const createRow = (textTask, dateTask = '') => {
-  //const textTask = text
-  //const dateTask = date
-  
+const createRow = (textTask, dateTask) => {
   
   const select = createSelect()
   const [spanEdit, spanDelete] = createTextBtn()
@@ -56,7 +52,7 @@ const createRow = (textTask, dateTask = '') => {
   btnEdit.innerHTML = spanEdit
   btnDelete.innerHTML = spanDelete
   
-  if (textTask) {
+  
     tbody.appendChild(tr)
     tdStatus.appendChild(select)
     tdBtn.appendChild(btnEdit)
@@ -66,49 +62,61 @@ const createRow = (textTask, dateTask = '') => {
     tr.appendChild(tdDate)
     tr.appendChild(tdStatus)
     tr.appendChild(tdBtn)
-  }
+  
 }
 
-const saveTaskLocal = (valueTask, valueDate = '') => {
+
+
+const saveTaskLocal = (valueTask, valueDate) => {
   const savedTasks = localStorage.getItem('textOfTask')
-  let taskSaves = []
+  const savedDates = localStorage.getItem('dateOfTask')
 
+  // const obj = {
+  //   title: savedTasks,
+  //   data: savedDates
+  // }
 
-  if (savedTasks) {
+  if (savedTasks && savedDates) {
     taskSaves = JSON.parse(savedTasks)
   }
 
-  if (valueTask) {
-    const task = valueTask
-    taskSaves.push(task)
+  if (valueTask && valueDate) {
+    
+    
+    const newobj = {}
 
-    const tasksJSON = JSON.stringify(taskSaves)
+    newobj.title = savedTasks
+    newobj.date = savedDates
+    
+    
+    const tasksJSON = JSON.stringify(newobj)
+    console.log(tasksJSON)
   
     localStorage.setItem('textOfTask', tasksJSON)
-    //localStorage.setItem('dateOfTask', valueDate)]
+    localStorage.setItem('dateOfTask', valueDate)
   }
 }
 
 
 const addTaskSave = () => {
   const sla = localStorage.getItem('textOfTask')
-  const dateOfTask = localStorage.getItem('dateOfTask')
+  const dateTask = localStorage.getItem('dateOfTask')
   const parseTaskSave = JSON.parse(sla)
-  
-  if (parseTaskSave) {
-    for (let valueTask of parseTaskSave) {
-      createRow(valueTask)
-    }
-  }
+  console.log(parseTaskSave)
+  // if (parseTaskSave) {
+  //   for (let valueTask of parseTaskSave) {
+  //     createRow(valueTask, dateTask)
+  //   }
+  // }
 }
 
 
 addTask.addEventListener('submit', e => {
   e.preventDefault()
   const inputTaskText = document.querySelector('#input-task')
-  createRow(inputTaskText.value)
-  saveTaskLocal(inputTaskText.value)
-  createDate()
+  createRow(inputTaskText.value, createDate())
+  saveTaskLocal(inputTaskText.value, createDate())
+  
   inputTaskText.value = ''
 })
 addTaskSave()

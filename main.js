@@ -1,12 +1,20 @@
 const tbody = document.querySelector('tbody')
 const addTask = document.querySelector('.add-form')
+const taskSaves = []
+
+const createDate = () => {
+  const date = new Date()
+  const newDate = date.toLocaleString()
+  return newDate
+}
 
 addTask.addEventListener('submit', e => {
   e.preventDefault()
-  textTask()
-  createRow()
+  const inputTaskText = document.querySelector('#input-task')
+  toTask(inputTaskText.value)
+  createDate()
+  inputTaskText.value = ''
 })
-
 const createElement = (tag) => document.createElement(tag)
 
 const createSelect = () => {
@@ -30,9 +38,10 @@ const createTextBtn = () => {
   return [spanEdit, spanDelete]
 }
 
-const createRow = (task) => {
-  const textTask = localStorage.getItem('textOfTask')
-  const dateTask = localStorage.getItem('dateTask')
+const createRow = (textTask, dateTask = '') => {
+  //const textTask = text
+  //const dateTask = date
+  
   
   const select = createSelect()
   const [spanEdit, spanDelete] = createTextBtn()
@@ -66,20 +75,41 @@ const createRow = (task) => {
   }
 }
 createRow()
+const saveTaskLocal = (valueTask, valueDate = '') => {
+  
+  taskSaves.push(valueTask)
+  const tasksJSON = JSON.stringify(taskSaves)
+  console.log(tasksJSON)
+  localStorage.setItem('textOfTask', tasksJSON)
+  //localStorage.setItem('dateOfTask', valueDate)
+}
+saveTaskLocal()
 
-const textTask = () => {
-  const textTask = document.querySelector('#input-task').value
+const toTask = (inputText) => {
   
-  if (!textTask) return alert('Digite algo antes de adicionar!')
+  const dateTask = createDate()
+  saveTaskLocal(inputText, dateTask)
   
-  localStorage.setItem('textOfTask', textTask)
+}
+toTask()
+
+const addTaskSave = () => {
+  const sla = localStorage.getItem('textOfTask')
+  const dateOfTask = localStorage.getItem('dateOfTask')
+
+  const parseTaskSave = JSON.parse(sla)
+  
+  for (let valueTask of parseTaskSave) {
+    createRow(valueTask)
+  }
+
+  
 }
 
-const createDate = () => {
-  const date = new Date()
-  localStorage.setItem('dateTask', date.toLocaleString()) 
-}
-createDate()
+addTaskSave()
+
+
+
 
 
 

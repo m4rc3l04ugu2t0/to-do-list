@@ -4,7 +4,7 @@ const inputTask = document.querySelector('#input-task')
 
  const createElement = (tag) => document.createElement(tag)
 
- const createSelect = () => {
+ const createSelect = (valueSelect) => {
    const options = `
    <option value="pendente">pendente</option>
    <option value="em andamento">em andamento</option>
@@ -12,7 +12,7 @@ const inputTask = document.querySelector('#input-task')
    `
    const select = createElement('select')
    select.innerHTML = options
-   console.log(select.value)
+   select.value = valueSelect
    return select
  }
 
@@ -27,9 +27,9 @@ const inputTask = document.querySelector('#input-task')
  }
 
  const createRow = (dateTask) => {
-   const {title, date} = dateTask
-   
-   const select = createSelect()
+   const {title, date, status} = dateTask
+
+   //const select = createSelect()
    const [spanEdit, spanDelete] = createTextBtn()
   
    const tr = createElement('tr')
@@ -39,6 +39,9 @@ const inputTask = document.querySelector('#input-task')
    const tdBtn = createElement('td')
    const btnEdit = createElement('button')
    const btnDelete = createElement('button')
+
+   //const task = new FetchTask()
+   createSelect(status)
   
    btnEdit.classList.add('btn-action')
    btnDelete.classList.add('btn-action')
@@ -50,7 +53,7 @@ const inputTask = document.querySelector('#input-task')
   
    if (dateTask) {
      tbody.appendChild(tr)
-     tdStatus.appendChild(select)
+     tdStatus.appendChild(status)
      tdBtn.appendChild(btnEdit)
      tdBtn.appendChild(btnDelete)
     
@@ -67,6 +70,7 @@ const inputTask = document.querySelector('#input-task')
    
    if (getTask) {
      for (let value of parseTask) {
+      //console.log(value)
        createRow(value)
      }
    }
@@ -79,7 +83,8 @@ class FetchTask {
     this.start = () => {
       return {
         title: this.addTask(),
-        date: this.createDate()
+        date: this.createDate(),
+        status: this.createSelect()
       }
     }
 
@@ -90,8 +95,22 @@ class FetchTask {
       const date = new Date().toLocaleString('pt-br', styleDate)
       return date
     }
+
     
-    this.saveTask = (taskValue, dateValue) => {
+
+    // this.createSelect = (valueSelect) => {
+    //   const options = `
+    //   <option value="pendente">pendente</option>
+    //   <option value="em andamento">em andamento</option>
+    //   <option value="concluido">concluido</option>
+    //   `
+    //   const select = createElement('select')
+    //   select.innerHTML = options
+    //   select.value = valueSelect
+    //   return select
+    // }
+    
+    this.saveTask = (taskValue, dateValue, selectValue) => {
       const getTask = localStorage.getItem('taskSave')
       const taskJSON = JSON.parse(getTask)
       
@@ -102,15 +121,15 @@ class FetchTask {
       }
       
       if (taskValue) {
-        const objdataTask = {title: taskValue, date: dateValue}
+        const objdataTask = {title: taskValue, date: dateValue, status: selectValue}
         arrayDataTask.push(objdataTask)
-        
+        console.log(arrayDataTask)
         const taskJSON = JSON.stringify(arrayDataTask)
         localStorage.setItem('taskSave', taskJSON)
       
       }
     }
-    this.saveTask(this.addTask(), this.createDate())
+    this.saveTask(this.addTask(), this.createDate(), this.createSelect())
     createRow(this.start())
   }
 }

@@ -7,16 +7,18 @@ const inputTask = document.querySelector('#input-task')
 
   if (innerText) element.innerText = innerText
   if (innerHTML) element.innerHTML = innerHTML
+  
+  return element
  }
- const createSelect = () => {
+ const createSelect = (valueSelect) => {
   const options = `
   <option value="pendente">pendente</option>
   <option value="em andamento">em andamento</option>
   <option value="concluido">concluido</option>
   `
   const select = createElement('select', '', options)
-  const valueSelect = select.value
-  return [select, valueSelect]
+  select.value = valueSelect
+  return select
 }
 
  const createTextBtn = () => {
@@ -28,12 +30,73 @@ const inputTask = document.querySelector('#input-task')
    `
    return [spanEdit, spanDelete]
  }
+ 
+ const updateTask = ({id, title, date, status, newStatus, classId}) => {
+   /*const getTask = localStorage.getItem('taskSave')
+      const taskJSON = JSON.parse(getTask)
+      
+      
+      let objId = {}
+      let arrayDataTask = []
+      
+      if (getTask) {
+        arrayDataTask = taskJSON
+        /*for (let value of taskJSON) {
+          objId = value
+        }
+      }
+      
+      if (valueId) {
+        
+        const objdataTask = {id: valueId, title: taskValue, date: dateValue, status: valueSelect}
+        objId[valueId] = objdataTask
+        arrayDataTask.push(objId)
+        
+        const taskJSON = JSON.stringify(arrayDataTask)
+        localStorage.setItem('taskSave', taskJSON)
+      */
 
- const createRow = (dateTask) => {
-   const {id, title, date} = dateTask
+   const getTask = localStorage.getItem('taskSave')
+   let parseTask = JSON.parse(getTask)
    
-   const select = createSelect()
-   //select.addEventListener('change', ({target})) => {
+   /*let newObj = {}
+   let newArray = []
+   
+   
+   if (getTask) {
+     newArray = parseTask
+    for (let value of parseTask) {
+      newObj = value
+    }
+   }*/
+    if (id) {
+   newObj = {id, title, date, status}
+   newObj.status = newStatus
+   const sla = classId[0]
+  
+   for (let value of parseTask) {
+     value[sla] = newObj
+   }
+   
+     const jsn = JSON.stringify(parseTask)
+     localStorage.setItem('taskSave', jsn)
+   
+   }
+   
+ }
+
+ const createRow = (dataTask) => {
+   const {id, title, date, status} = dataTask
+  console.log(status)
+   
+   
+   const select = createSelect(status)
+   select.classList.add(id)
+   
+   select.addEventListener('click', (target) => {
+     const selectId = select.classList
+     select.addEventListener('change', ({target}) => updateTask({...dataTask, newStatus: target.value, classId: selectId}))
+   })
 
    const [spanEdit, spanDelete] = createTextBtn()
   
@@ -53,8 +116,8 @@ const inputTask = document.querySelector('#input-task')
    btnEdit.innerHTML = spanEdit
    btnDelete.innerHTML = spanDelete
   
-   if (dateTask) {
-     tbody.appendChild(tr)
+   //if (dataTask) {
+     //tbody.appendChild(tr)
      tdStatus.appendChild(select)
      tdBtn.appendChild(btnEdit)
      tdBtn.appendChild(btnDelete)
@@ -63,34 +126,40 @@ const inputTask = document.querySelector('#input-task')
      tr.appendChild(tdDate)
      tr.appendChild(tdStatus)
      tr.appendChild(tdBtn)
-   }
+   
    return tr
  }
  
  const loadTaskSave = () => {
    const getTask = localStorage.getItem('taskSave')
    const parseTask = JSON.parse(getTask)
+   
    tbody.innerHTML = ''
    if (getTask) {
      for (let value of parseTask) {
-      createRow(value)
+      const objId = Object.values(value)
+      objId.filter(objIdValue => {
+        const tr = createRow(objIdValue)
+        tbody.appendChild(tr)
+      })
      }
    }
  }
    
-
-
 class FetchTask {
   constructor() {
     this.start = () => {
+     /*this.saveTask(this.createId(), this.addTask(), this.createDate(), 'pendente')
+      loadTaskSave()*/
       return {
         id: this.createId(),
         title: this.addTask(),
-        date: this.createDate()
+        date: this.createDate(),
+        status: 'pendente'
       }
     }
 
-    this.createId = () => Math.round(Math.random() * (1 - 99) + 1)
+    this.createId = () => 'id' + Math.floor(Math.random() * 100) + 1
 
     this.addTask = () => inputTask.value
 
@@ -99,43 +168,47 @@ class FetchTask {
       const date = new Date().toLocaleString('pt-br', styleDate)
       return date
     }
-
-    this.status = () => {
-      const valueSelect = createSelect()
-      return console.log(valueSelect)
-    }
-    this.status()
-    this.saveTask = (idValue, taskValue, dateValue) => {
+    
+    this.saveTask = (valueId, taskValue, dateValue, valueSelect) => {
       const getTask = localStorage.getItem('taskSave')
       const taskJSON = JSON.parse(getTask)
+      console.log(taskJSON)
       
+      let objId = {}
       let arrayDataTask = []
       
       if (getTask) {
         arrayDataTask = taskJSON
+        for (let value of taskJSON) {
+          objId = value
+        }
       }
       
-      if (taskValue) {
-        const objdataTask = {id: idValue, title: taskValue, date: dateValue}
-        arrayDataTask.push(objdataTask)
+      if (valueId) {
         
+        const objdataTask = {id: valueId, title: taskValue, date: dateValue, status: valueSelect}
+        objId[valueId] = objdataTask
+        
+        arrayDataTask.push(objId)
+        
+        console.log(objId)
         const taskJSON = JSON.stringify(arrayDataTask)
         localStorage.setItem('taskSave', taskJSON)
       
       }
     }
     if (inputTask.value) {
-    this.saveTask(this.createId(), this.addTask(), this.createDate())
-    loadTaskSave()
+    this.saveTask(this.createId(), this.addTask(), this.createDate(), 'pendente')
+      loadTaskSave()
     }
-    console.log('xi')
   }
 }
 
 addForm.addEventListener('submit', e => {
   e.preventDefault()
+  const task = new FetchTask()
   task.start()
   inputTask.value = ''
 })
-const task = new FetchTask()
+
 loadTaskSave()

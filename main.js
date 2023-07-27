@@ -106,15 +106,12 @@ const inputTask = document.querySelector('#input-task')
    })
    
    btnEdit.addEventListener('click', () => {
-     
      tdTitle.innerHTML = ''
      tdTitle.appendChild(form)
      input.value = title
    })
    
-   btnDelete.addEventListener('click', e => {
-     resetTask(id)
-   })
+   btnDelete.addEventListener('click', e => resetTask(id))
    
    tdTitle.innerHTML = title
    tdDate.innerHTML = date
@@ -190,7 +187,7 @@ class FetchTask {
         objId[valueId] = objdataTask
         
         arrayDataTask.push(objId)
-      
+        
         const taskJSON = JSON.stringify(arrayDataTask)
         localStorage.setItem('taskSave', taskJSON)
       }

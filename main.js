@@ -56,6 +56,19 @@ const inputTask = document.querySelector('#input-task')
     localStorage.setItem('taskSave', taskJSON)
    } 
  }
+ 
+ const resetTask = (idTask) => {
+   const getTask = localStorage.getItem('taskSave')
+   const parseTask = JSON.parse(getTask)
+   
+   parseTask.filter(value => {
+    delete value[idTask]
+   })
+   const taskJSON = JSON.stringify(parseTask)
+   localStorage.setItem('taskSave', taskJSON)
+   
+   loadTaskSave()
+ }
 
  const createRow = (dataTask) => {
    const {id, title, date, status} = dataTask
@@ -66,9 +79,10 @@ const inputTask = document.querySelector('#input-task')
 
    select.addEventListener('change', ({target}) => {
     updateTask({...dataTask, newStatus: target.value, classId: selectId})
+    loadTaskSave()
    })
    const [spanEdit, spanDelete] = createTextBtn()
-  
+   
    const tr = createElement('tr')
    const tdTitle = createElement('td')
    const tdDate = createElement('td')
@@ -76,27 +90,47 @@ const inputTask = document.querySelector('#input-task')
    const tdBtn = createElement('td')
    const btnEdit = createElement('button')
    const btnDelete = createElement('button')
-  
+   const form = createElement('form')
+   const input = createElement('input')
+   
    btnEdit.classList.add('btn-action')
    btnDelete.classList.add('btn-action')
-  
+   
+   form.appendChild(input)
+   
+   form.addEventListener('submit', e => {
+     e.preventDefault()
+     updateTask({id, title: input.value, date, status, newStatus: status, classId: selectId})
+     input.blur()
+     loadTaskSave()
+   })
+   
+   btnEdit.addEventListener('click', () => {
+     
+     tdTitle.innerHTML = ''
+     tdTitle.appendChild(form)
+     input.value = title
+   })
+   
+   btnDelete.addEventListener('click', e => {
+     resetTask(id)
+   })
+   
    tdTitle.innerHTML = title
    tdDate.innerHTML = date
    btnEdit.innerHTML = spanEdit
    btnDelete.innerHTML = spanDelete
-  
    
-
-  tdStatus.appendChild(select)
-  tdBtn.appendChild(btnEdit)
-  tdBtn.appendChild(btnDelete)
-
-  tr.appendChild(tdTitle)
-  tr.appendChild(tdDate)
-  tr.appendChild(tdStatus)
-  tr.appendChild(tdBtn)
+   tdStatus.appendChild(select)
+   tdBtn.appendChild(btnEdit)
+   tdBtn.appendChild(btnDelete)
    
-  return tr
+   tr.appendChild(tdTitle)
+   tr.appendChild(tdDate)
+   tr.appendChild(tdStatus)
+   tr.appendChild(tdBtn)
+   
+   return tr
  }
  
  const loadTaskSave = () => {
@@ -114,7 +148,7 @@ const inputTask = document.querySelector('#input-task')
      }
    }
  }
-   
+ 
 class FetchTask {
   constructor() {
     this.start = () => {
@@ -125,11 +159,11 @@ class FetchTask {
         status: 'pendente'
       }
     }
-
+    
     this.createId = () => 'id' + Math.floor(Math.random() * 100) + 1
-
+    
     this.addTask = () => inputTask.value
-
+    
     this.createDate = () => {
       const styleDate = { dateStyle: 'long', timeStyle: 'short' }
       const date = new Date().toLocaleString('pt-br', styleDate)
@@ -161,10 +195,8 @@ class FetchTask {
         localStorage.setItem('taskSave', taskJSON)
       }
     }
-    if (inputTask.value) {
     this.saveTask(this.createId(), this.addTask(), this.createDate(), 'pendente')
-      loadTaskSave()
-    }
+    loadTaskSave()
   }
 }
 

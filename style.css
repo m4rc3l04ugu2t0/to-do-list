@@ -90,10 +90,6 @@ table {
   width: 100%;
 }
 
-tr {
-  word-break: break-all;
-}
-
 td, th {
   padding: 10px 15px;
   border: 1px solid black;

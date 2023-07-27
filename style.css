@@ -4,7 +4,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  
 }
 
 body {
@@ -71,9 +70,6 @@ input:hover {
   color: white;
 }
 .btn-action {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
 }
 
@@ -87,6 +83,10 @@ input:hover {
 
 table {
   border-collapse: collapse;
+  width: 100%;
+}
+
+tr {
   width: 100%;
 }
 

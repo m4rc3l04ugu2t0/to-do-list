@@ -1,6 +1,6 @@
 const tbody = document.querySelector('tbody')
 const addForm = document.querySelector('.add-form')
-const inputTask = document.querySelector('#input-task')
+const inputTask = document.querySelector('#input-task');
 
  const createElement = (tag, innerText = '', innerHTML = '') => {
   const element = document.createElement(tag)
